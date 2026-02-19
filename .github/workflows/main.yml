@@ -28,6 +28,7 @@ jobs:
     - name: Download Kernel Config
       run: |
         git clone https://github.com/qqdasb/crdroid-kernel-raphael-lxc-kvm-sukisu --depth 1
+        midir kernel/out
         cd kernel/out
         cp ../../crdroid-kernel-raphael-lxc-kvm-sukisu/config-sukisu .config
 
