@@ -59,11 +59,7 @@ jobs:
     - name: Pack with AnyKernel
       run: |
         git clone --depth 1 https://github.com/qqdasb/AnyKernel3.git
-        if [ -f kernel/out/arch/arm64/boot/Image.gz-dtb ]; then
-          cp kernel/out/arch/arm64/boot/Image.gz-dtb AnyKernel3/
-        else
-          cp kernel/out/arch/arm64/boot/Image AnyKernel3/
-        fi
+        cp kernel/out/arch/arm64/boot/* AnyKernel3/
         
         cd AnyKernel3
         zip -r ../Kernel.zip *
