@@ -31,6 +31,7 @@ jobs:
         mkdir kernel/out
         cd kernel
         cp ../crdroid-kernel-raphael-lxc-kvm-sukisu/config out/.config
+        env ARCH=arm64 scripts/kconfig/merge_config.sh -O out/ out/.config ../crdroid-kernel-raphael-lxc-kvm-sukisu/config
 
     - name: Build
       run: |
@@ -39,7 +40,6 @@ jobs:
         GCC64_BIN=$GITHUB_WORKSPACE/toolchains/gcc64/bin
         GCC32_BIN=$GITHUB_WORKSPACE/toolchains/gcc32/bin
         export PATH=$CLANG_BIN:$GCC64_BIN:$GCC32_BIN:$PATH
-        env ARCH=arm64 scripts/kconfig/merge_config.sh -O out/ out/.config ../crdroid-kernel-raphael-lxc-kvm-sukisu/config
         make -j$(nproc --all) O=out ARCH=arm64 CC=clang CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- LLVM=1 LLVM_IAS=1 olddefconfig
         
         make -j$(nproc --all) O=out \
@@ -55,7 +55,7 @@ jobs:
           OBJDUMP=llvm-objdump \
           STRIP=llvm-strip \
           LD=ld.lld \
-          Image.gz-dtb dtbo.img
+          Image.gz-dtb
 
     - name: Pack with AnyKernel
       run: |
