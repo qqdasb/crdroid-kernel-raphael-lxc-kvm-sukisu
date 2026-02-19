@@ -60,7 +60,7 @@ jobs:
 
     - name: Pack with AnyKernel
       run: |
-        git clone --depth 1 https://github.com/qqdasb/AnyKernel3.git
+        git clone --depth 1 https://github.com/qqdasb/AnyKernel3-raphael.git
         cp kernel/out/arch/arm64/boot/* AnyKernel3/
         
         cd AnyKernel3
