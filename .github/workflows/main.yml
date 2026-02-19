@@ -68,6 +68,10 @@ jobs:
         
         cd AnyKernel3
         sed -i 's/device.name1=maguro/device.name1=raphael/g' anykernel.sh
+        sed -i 's/device.name2=toro/device.name2=raphaelin/g' anykernel.sh
+        sed -i 's/device.name3=toroplus/device.name3=mi9tpro/g' anykernel.sh
+        sed -i 's/device.name4=tuna/device.name4=/g' anykernel.sh
+        sed -i 's|block=/dev/block/platform/omap/omap_hsmmc.0/by-name/boot|block=/dev/block/bootdevice/by-name/boot|g' anykernel.sh
         zip -r ../Kernel.zip *
 
     - name: Upload
