@@ -25,10 +25,11 @@ jobs:
       run: |
         git clone --depth 1 -b 16.0-raphael https://github.com/crdroidandroid/android_kernel_xiaomi_sm8150 kernel
 
-    - name: Copy Kernel Config
+    - name: Download Kernel Config
       run: |
+        git clone https://github.com/qqdasb/crdroid-kernel-raphael-lxc-kvm-sukisu --depth 1
         cd kernel
-        cp $GITHUB_WORKSPACE/config-sukisu .config
+        cp ../crdroid-kernel-raphael-lxc-kvm-sukisu/config-sukisu .config
 
     - name: Build
       run: |
