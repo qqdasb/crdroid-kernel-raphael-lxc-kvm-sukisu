@@ -27,14 +27,9 @@ permissions:
 jobs:
   download-and-upload:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.PAT }}   # 设置全局环境变量，供所有 gh 命令使用
     steps:
-      # 使用 GitHub CLI 认证（通过 PAT）
-      - name: Authenticate GitHub CLI
-        env:
-          GH_TOKEN: ${{ secrets.PAT }}
-        run: |
-          echo "$GH_TOKEN" | gh auth login --with-token
-
       # 如果没有提供 run_id，则获取指定工作流的最新成功运行 ID
       - name: Get latest successful run ID
         id: get_run
@@ -44,12 +39,12 @@ jobs:
           WORKFLOW: ${{ github.event.inputs.workflow_name }}
           BRANCH: ${{ github.event.inputs.branch }}
         run: |
-          # 构建 API 查询参数
+          # 构建分支参数（如果提供了分支）
           BRANCH_ARG=""
           if [ -n "$BRANCH" ]; then
             BRANCH_ARG="--branch $BRANCH"
           fi
-          # 使用 gh run list 列出工作流运行，取第一个成功运行的 ID
+          # 使用 gh run list 获取最新成功运行的 ID
           RUN_ID=$(gh run list --repo "$REPO" --workflow "$WORKFLOW" $BRANCH_ARG --status success --limit 1 --json databaseId --jq '.[0].databaseId')
           if [ -z "$RUN_ID" ]; then
             echo "No successful run found for the given criteria."
@@ -69,12 +64,14 @@ jobs:
           echo "Downloading artifact '$ARTIFACT_NAME' from run $RUN_ID in repo $REPO"
           # 创建下载目录
           mkdir -p ./downloaded_artifact
-          # gh run download 会将 artifact 下载到指定目录（默认解压）
+          # gh run download 会自动解压 artifact 到指定目录
           gh run download "$RUN_ID" --repo "$REPO" --name "$ARTIFACT_NAME" --dir ./downloaded_artifact
 
+      # 列出下载的文件（可选）
       - name: List downloaded files
         run: ls -la ./downloaded_artifact/
 
+      # 上传到当前仓库的 Release
       - name: Upload to Release
         uses: ncipollo/release-action@v1
         with:
