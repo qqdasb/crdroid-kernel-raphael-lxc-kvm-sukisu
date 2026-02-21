@@ -1,0 +1,58 @@
+name: Sync Artifact from Another Repo to Release
+
+on:
+  # 手动触发，方便测试和按需运行
+  workflow_dispatch:
+    inputs:
+      target_repo:
+        description: 'ArKT-7/woawin'
+        required: true
+        default: 'ArKT-7/woawin'
+      workflow_name:
+        description: 'ltsc-uup-iso.yml'
+        required: true
+        default: 'ltsc-uup-iso.yml'
+      artifact_name:
+        description: 'ESD_LTSC_IOT_ENTERPRISE_26100.7840.260206-0415.GE_RELEASE_SVC_PROD1_CLIENT_A64FRE_EN-US'
+        required: true
+        default: 'ESD_LTSC_IOT_ENTERPRISE_26100.7840.260206-0415.GE_RELEASE_SVC_PROD1_CLIENT_A64FRE_EN-US'
+      branch:
+        description: '目标分支 (默认: main)'
+        required: true
+        default: 'main'
+      run_id:
+        description: ''
+        required: true
+        default: ''
+
+permissions:
+  contents: write   # 允许当前工作流创建/更新 Release
+
+jobs:
+  download-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 从其他仓库下载指定的 Artifact
+      - name: Download Artifact from another repo
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ secrets.PAT }}          # 需要访问其他仓库的 token
+          repo: ${{ github.event.inputs.target_repo }}
+          workflow: ${{ github.event.inputs.workflow_name }}
+          name: ${{ github.event.inputs.artifact_name }}
+          branch: ${{ github.event.inputs.branch }}
+          run_id: ${{ github.event.inputs.run_id }}
+          path: ./downloaded_artifact                # 下载到当前工作区的子目录
+
+      # 2. （可选）列出下载的文件，方便调试
+      - name: List downloaded files
+        run: ls -la ./downloaded_artifact/
+
+      # 3. 将下载的文件上传到当前仓库的 Release
+      - name: Upload to Release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true                          # 允许更新已有的 Release
+          tag: "synced-artifact"                       # Release 的标签，可以自定义
+          artifacts: "./downloaded_artifact/*"         # 上传该目录下的所有文件
+          token: ${{ secrets.GITHUB_TOKEN }}           # 系统自动提供的 token，有权限写入当前仓库
