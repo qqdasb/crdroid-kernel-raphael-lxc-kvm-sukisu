@@ -31,10 +31,12 @@ jobs:
         mkdir kernel/out
         cd kernel
         cp ../crdroid-kernel-raphael-lxc/config out/.config
+        git apply -v ../disable-andromeda.patch
 
     - name: Build
       run: |
-        ulimit -s unlimited
+        ulimit -s 65535
+        export MAX_ARG_STRLEN=131072
         cd kernel
         CLANG_BIN=$GITHUB_WORKSPACE/toolchains/clang/clang-r530567/bin
         GCC64_BIN=$GITHUB_WORKSPACE/toolchains/gcc64/bin
