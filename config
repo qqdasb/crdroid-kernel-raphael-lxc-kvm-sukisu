@@ -4482,7 +4482,7 @@ CONFIG_UIO=y
 # CONFIG_UIO_MF624 is not set
 CONFIG_UIO_MSM_SHAREDMEM=y
 # CONFIG_VFIO is not set
-CONFIG_VIRT_DRIVERS=y
+# CONFIG_VIRT_DRIVERS is not set
 
 #
 # Virtio drivers
