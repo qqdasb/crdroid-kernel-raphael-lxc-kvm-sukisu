@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     
     steps:
     - name: Install Dependencies
@@ -34,6 +34,7 @@ jobs:
 
     - name: Build
       run: |
+        ulimit -s unlimited
         cd kernel
         CLANG_BIN=$GITHUB_WORKSPACE/toolchains/clang/clang-r530567/bin
         GCC64_BIN=$GITHUB_WORKSPACE/toolchains/gcc64/bin
