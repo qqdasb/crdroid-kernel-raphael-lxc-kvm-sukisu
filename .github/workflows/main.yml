@@ -31,19 +31,15 @@ jobs:
         mkdir kernel/out
         cd kernel
         cp ../crdroid-kernel-raphael-lxc/config out/.config
-        sed -i '/andromeda/d' arch/arm64/boot/dts/qcom/Makefile
 
     - name: Build
       run: |
-        ulimit -s unlimited
         CLANG_BIN=$GITHUB_WORKSPACE/toolchains/clang/clang-r530567/bin
         GCC64_BIN=$GITHUB_WORKSPACE/toolchains/gcc64/bin
         GCC32_BIN=$GITHUB_WORKSPACE/toolchains/gcc32/bin
         export PATH=$CLANG_BIN:$GCC64_BIN:$GCC32_BIN:$PATH
         
-        sudo mv kernel /
-        sudo chown -R runner:runner /kernel
-        cd /kernel
+        cd kernel
         make -j$(nproc --all) O=out \
           ARCH=arm64 \
           CC=clang \
@@ -62,7 +58,7 @@ jobs:
     - name: Pack with AnyKernel
       run: |
         git clone --depth 1 https://github.com/qqdasb/AnyKernel3-raphael.git AnyKernel3
-        cp /kernel/out/arch/arm64/boot/Image.gz-dtb AnyKernel3/
+        cp kernel/out/arch/arm64/boot/Image.gz-dtb AnyKernel3/
         
         cd AnyKernel3
         zip -r ../Kernel.zip *
