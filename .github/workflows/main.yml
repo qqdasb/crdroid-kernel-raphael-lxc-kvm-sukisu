@@ -17,7 +17,7 @@ jobs:
     - name: Download Toolchains
       run: |
         cd $GITHUB_WORKSPACE/toolchains
-        git clone --depth 1 -b main https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 clang
+        git clone --depth 1 https://gitlab.com/crdroidandroid/android_prebuilts_clang_host_linux-x86_clang-r547379 clang
         git clone --depth 1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 gcc64
         git clone --depth 1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 gcc32
 
@@ -34,7 +34,7 @@ jobs:
 
     - name: Build
       run: |
-        CLANG_BIN=$GITHUB_WORKSPACE/toolchains/clang/clang-r530567/bin
+        CLANG_BIN=$GITHUB_WORKSPACE/toolchains/clang/bin
         GCC64_BIN=$GITHUB_WORKSPACE/toolchains/gcc64/bin
         GCC32_BIN=$GITHUB_WORKSPACE/toolchains/gcc32/bin
         export PATH=$CLANG_BIN:$GCC64_BIN:$GCC32_BIN:$PATH
