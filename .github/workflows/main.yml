@@ -43,6 +43,7 @@ jobs:
         GCC32_BIN=$GITHUB_WORKSPACE/toolchains/gcc32/bin
         
         cd kernel
+        export PATH=$CLANG_BIN:$GCC64_BIN:$GCC32_BIN:$PATH
         make -j$(nproc --all) O=out \
           ARCH=arm64 \
           CC=clang \
