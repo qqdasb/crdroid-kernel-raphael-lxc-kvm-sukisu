@@ -11,8 +11,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y bc bison build-essential flex g++-multilib gcc-multilib git gnupg gperf lib32readline-dev lib32z1-dev liblz4-tool libncurses6 libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python3 git-lfs pkg-config
-        dtc --version
+        sudo apt-get install -y bc bison build-essential flex g++-multilib gcc-multilib git gnupg gperf lib32readline-dev lib32z1-dev liblz4-tool libncurses6 libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python3 git-lfs pkg-config device-tree-compiler
         mkdir -p $GITHUB_WORKSPACE/toolchains
 
     - name: Download Toolchains
@@ -45,23 +44,7 @@ jobs:
 
         export PATH=$CLANG_BIN:$GCC64_BIN:$GCC32_BIN:$PATH
         cd kernel
-        make -j$(nproc --all) O=out \
-          ARCH=arm64 \
-          CC=clang \
-          CLANG_TRIPLE=aarch64-linux-gnu- \
-          CROSS_COMPILE=aarch64-linux-android- \
-          CROSS_COMPILE_ARM32=arm-linux-androideabi- \
-          LLVM=1 \
-          LLVM_IAS=1 \
-          NM=llvm-nm \
-          OBJCOPY=llvm-objcopy \
-          OBJDUMP=llvm-objdump \
-          STRIP=llvm-strip \
-          LD=ld.lld \
-          scripts
-        export PATH=$PWD/out/scripts/dtc:$CLANG_BIN:$GCC64_BIN:$GCC32_BIN:$PATH
-        dtc --version
-        which dtc
+        export PATH=$CLANG_BIN:$GCC64_BIN:$GCC32_BIN:$PATH
         make -j$(nproc --all) O=out \
           ARCH=arm64 \
           CC=clang \
