@@ -41,9 +41,23 @@ jobs:
         CLANG_BIN=$GITHUB_WORKSPACE/toolchains/clang/bin
         GCC64_BIN=$GITHUB_WORKSPACE/toolchains/gcc64/bin
         GCC32_BIN=$GITHUB_WORKSPACE/toolchains/gcc32/bin
-        
+
+        export PATH=$CLANG_BIN:$GCC64_BIN:$GCC32_BIN:$PATH
         cd kernel
-        make -j$(nproc --all) -C scripts/dtc
+        make -j$(nproc --all) O=out \
+          ARCH=arm64 \
+          CC=clang \
+          CLANG_TRIPLE=aarch64-linux-gnu- \
+          CROSS_COMPILE=aarch64-linux-android- \
+          CROSS_COMPILE_ARM32=arm-linux-androideabi- \
+          LLVM=1 \
+          LLVM_IAS=1 \
+          NM=llvm-nm \
+          OBJCOPY=llvm-objcopy \
+          OBJDUMP=llvm-objdump \
+          STRIP=llvm-strip \
+          LD=ld.lld \
+          scripts
         export PATH=$CLANG_BIN:$GCC64_BIN:$GCC32_BIN:$PWD/scripts/dtc:$PATH
         make -j$(nproc --all) O=out \
           ARCH=arm64 \
